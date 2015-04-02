@@ -75,20 +75,7 @@ struct RGB hslToRgb( struct HSL hsl){
 }
 
 
-
-
-
-//other stuff
-void colorWipe(u8 c, uint8_t wait) {
-  int i;
- 
-  for (i=0; i < strip.numPixels(); i++) {
-      strip.setPixelColor(i, c);
-      strip.show();
-      delay(wait);
-  }
-}
-
+//wipes the whole spectrum from a starting hsl
 void rainbowWipe(struct HSL hsl, uint8_t wait){
 	int i;
 	float shift;
@@ -104,13 +91,27 @@ void rainbowWipe(struct HSL hsl, uint8_t wait){
 	strip.show();
 }
 
-
-void oneColor (uint32_t rgb){
+//displays a single hsl color
+void oneColor (struct HSL hsl){
 	int i;
+	RGB rgb;
+	rgb = hslTopRgb(hsl);
 	for (i = 0; i < numberOfLeds; i++) {
-		strip.setPixelColor(i, rgb);
+		strip.setPixelColor(i, rgb.packed);
 	}
 	strip.show();
+}
+
+//wipes a single hsl color
+void wipeColor (strict HSL hsl, uint8_t wait){
+	int i;
+	RGB rgb;
+	rgb = hslTopRgb(hsl);
+	for (i=0; i < numberofLeds; i++){
+		strip.setPixelColor(i, rgb.packed);
+		strip.show();
+		delay(waait);
+	}
 }
 
 void setup() {
@@ -131,7 +132,7 @@ void loop() {
 	hsl.l = 0.1;
 	int i;
 	for (i=0; i < 100; i++){
-		hsl.h = (hsl.h + 100);
+		hsl.h = (hsl.h + 30);
 		rainbowWipe(hsl, 10);
 	}
 
