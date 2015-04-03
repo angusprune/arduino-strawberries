@@ -103,16 +103,89 @@ void oneColor (struct HSL hsl){
 }
 
 //wipes a single hsl color
-void wipeColor (strict HSL hsl, uint8_t wait){
+void wipeColor (struct HSL hsl, uint8_t wait){
 	int i;
 	RGB rgb;
-	rgb = hslTopRgb(hsl);
+	rgb = hslToRgb(hsl);
 	for (i=0; i < numberofLeds; i++){
 		strip.setPixelColor(i, rgb.packed);
 		strip.show();
 		delay(waait);
 	}
 }
+
+//drips a single colour
+//UNTESTED
+void drip (struct HSL hsl){
+	int i;
+	RGB rgb;
+	rgb = hslToRgb(hsl);
+		for (i=0; i < numberofLeds; i++){
+		Strip.setPixelColor(i, rgb.packed)
+		if (i > 0){
+			Strip.setPixelColor(i-1, 0);
+		};
+	}
+	
+}
+
+//UNTESTED
+void dripFill (struct HSL hsl){
+	int i;
+	RGB rgb;
+	rgb = hslToRgb(hsl);
+	for (i=0; i < numberofLeds; i++){
+		drip(hsl);
+		int i2;
+		for (i2=0; i2 < i; i2++){
+			Strip.setPixelColor(numberOfLeds-i2, rgb.packed);
+		}
+	}
+}
+
+//untested
+void raindowSweep(int duration){
+	int i;
+	RGB rgb;
+	HSL hsl;
+	hsl.h = 1;
+	hsl.l = 0.1;
+	hsl.l = 1;
+	for (i=0; i < duration; i++) {
+		int offset;
+		int speed;
+		offset = 20; //experiment with this, difference in hue between consecutive LEDs
+		int i2;
+		for (i2=0; i2 < numberOfLeds; i2++){
+			rgb = hslToRgb(hsl);
+			strip.setPixelColor(i, rgb.packed);
+			hsl.h = hsl.h + offset;
+		}
+		strip.show();
+		hsl.h = hsl.h + offset;
+		delay (wait);
+	}
+}
+//untested - still being written - brightness wipe which moves
+void brightnessWipe(struct HSL hsl, int duration){
+	int i;
+	int i2;
+	RGB rgb;
+	hsl.l = 0;
+	shift = 0;
+	for (i2=0; i2 < duration; i2++){
+		shift = shift + 1;
+		for (i=shift; i < numberofLeds; i++){
+			float shift;
+			shift = 100 / numberOfLeds;
+			rgb  = hslToRgb(hsl);
+			strip.setPixelColor(i, rgb.packed);
+			hsl.l = hsl.l + shift;
+		}
+	strip.show();
+	}
+}
+
 
 void setup() {
 
