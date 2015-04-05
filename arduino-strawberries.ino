@@ -131,6 +131,67 @@ void drip (struct HSL hsl, int wait){
 	
 }
 
+void drip2 (struct HSL hsl, int wait, int duration){
+	int i;
+	RGB rgb;
+	HSL hsl2;
+	int led;
+
+		for (i=0; i < duration; i++){
+			led = i % numberOfLeds;
+			rgb = hslToRgb(hsl);
+			strip.setPixelColor(led, rgb.packed);
+			strip.show();
+			delay(wait/5);
+			hsl2.l = hsl.l /2;
+			rgb = hslToRgb(hsl2);
+			led = (i-1) % numberOfLeds;
+			strip.setPixelColor(led, rgb.packed);
+			strip.show();
+			delay(wait/5);
+			hsl2.l = hsl2.l /2;
+			rgb = hslToRgb(hsl2);
+						led = (i-2) % numberOfLeds;
+			strip.setPixelColor(led, rgb.packed);
+			strip.show();
+			delay(wait/5);
+			hsl2.l = hsl2.l /2;
+			rgb = hslToRgb(hsl2);
+						led = (i-3) % numberOfLeds;
+			strip.setPixelColor(led, rgb.packed);
+			strip.show();
+			delay(wait/5);
+			hsl2.l = 0;
+			rgb = hslToRgb(hsl2);
+						led = (i-4) % numberOfLeds;
+			strip.setPixelColor(led, rgb.packed );
+			strip.show();
+			
+			delay(wait/5);
+		}
+	/*
+		strip.setPixelColor(5, rgb.packed);
+	hsl.l = 0.01;
+	hsl.s = 0.5;
+	rgb = hslToRgb(hsl);
+	strip.setPixelColor(6, rgb.packed);
+	strip.show();
+		strip.setPixelColor(7, rgb.packed);
+	hsl.l = 0.01;
+	hsl.s = 0.01;
+	rgb = hslToRgb(hsl);
+	strip.setPixelColor(8, rgb.packed);
+	strip.show();
+		hsl.l = 0.003;
+	hsl.s = 0.003;
+	rgb = hslToRgb(hsl);
+	strip.setPixelColor(9, rgb.packed);
+	strip.show();
+*/
+}
+
+
+
 //fixed version of drip for use in dripFill
 void dripForFill (struct HSL hsl, int wait, int fill){
 	int i;
@@ -161,33 +222,6 @@ void dripFill (struct HSL hsl, int wait){
 	}
 }
 
-
-	int i;
-	RGB rgb;
-	HSL hsl;
-	hsl.h = 1;
-	hsl.l = 0.1;
-	hsl.s = 1;
-		int offset;
-		int speed;
-		int i2;
-		int led;
-		offset = 5; //experiment with this, difference in hue between consecutive LEDs
-
-	for (i=0; i < duration; i++) {
-		led = i % numberOfLeds;
-
-		for (i2 = 0; i2 < numberOfLeds; i2++){
-			rgb = hslToRgb(hsl);
-			led = i2 % numberOfLeds;
-			strip.setPixelColor(i2, rgb.packed);
-			hsl.h = hsl.h + offset;
-		}
-		strip.show();
-		hsl.h = hsl.h + 1;
-		delay (180);
-	}
-}
 //rainbow sweep
 void rainbowSweep(int duration, int wait){
 	int i;
@@ -254,11 +288,14 @@ void loop() {
 
 	HSL hsl;
 	RGB rgb;
-	hsl.h = 200;
+	hsl.h = 280;
 	hsl.s = 1;
-	hsl.l = 0.1;
+	hsl.l = 0.5;
+	rgb  = hslToRgb(hsl);
+	//dripFill(hsl, 10);
+	//rainbowSweep(1000,50);
+	drip2(hsl,200, 1000);
 	
-	rainbowSweep (300,50);
 
 	
 };
