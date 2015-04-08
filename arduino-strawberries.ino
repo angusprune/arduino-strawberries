@@ -74,6 +74,76 @@ struct RGB hslToRgb( struct HSL hsl){
 	return rgb;
 }
 
+//pack HSL
+struct HSL packHsl (int h, int s, int l){
+	HSL hsl;
+	hsl.h = h;
+	hsl.s = s;
+	hsl.l = l;
+	return hsl;
+}
+
+//Working set HSL to Web colours http://en.wikipedia.org/wiki/Web_colors
+// White, Silver, Gray, Black, Red, Maroon, Yellow, Olive,
+// Lime, Green, Aqua, Teal, Blue, Navy, Fuchsia, Purple
+struct HSL webColor(string colorName){
+	HSL hsl;
+	switch (colorName) {
+		case White:
+			hsl = packHsl(0,0,100);
+			break;
+		case Silver:
+			hsl = packHsl(0,0,75);
+			break;
+		case Gray:
+			hsl = packHsl(0,0,50);
+			break;
+		case Black:
+			hsl = packHsl(0,0,0);
+			break;
+		case Red:
+			hsl =packHsl(0,100,50);
+			break;
+		case Maroon:
+			hsl = packHsl(0, 100, 25);
+			break;
+		case Yellow:
+			hsl = packHsl(60,100,50);
+			break;
+		case Olive:
+			hsl = packHsl(60,100,25);
+			break;
+		case Lime:
+			hsl = packHsl(120,100,50);
+			break;
+		case Green:
+			hsl = packHsl(120,100,25);
+			break;
+		case Aqua:
+			hsl = packHsl(180,100,50);
+			break;
+		case Teal:
+			hsl = packHsl(180,100,25);
+			break;
+		case Blue:
+			hsl = packHsl(240,100,50);
+			break;
+		case Navy:
+			hsl = packHsl(240,100,25);
+			break;
+		case Fuchsia:
+			hsl = packHsl(300,100,50);
+			break;
+		case Purple:
+			hsl = packHsl(300,100,25);
+			break;
+		default:
+			hsl = packHsl(0,0,0);
+		
+	}
+	return hsl;
+}
+
 
 //wipes the whole spectrum from a starting hsl
 void rainbowWipe(struct HSL hsl, uint8_t wait){
@@ -190,10 +260,24 @@ void drip2 (struct HSL hsl, int wait, int duration){
 */
 }
 
-
-
 //fixed version of drip for use in dripFill
 void dripForFill (struct HSL hsl, int wait, int fill){
+	int i;
+	RGB rgb;
+	rgb = hslToRgb(hsl);
+		for (i=0; i < numberOfLeds - fill; i++){
+		strip.setPixelColor(i, rgb.packed);
+		if (i > 0){
+			strip.setPixelColor(i-1, 0);
+		};
+		strip.show();
+		delay(wait);
+	}
+	
+}
+
+//fixed version of drip2 for use in dripFill
+void drip2ForFill (struct HSL hsl, int wait, int fill){
 	int i;
 	RGB rgb;
 	rgb = hslToRgb(hsl);
@@ -293,8 +377,7 @@ void loop() {
 	hsl.l = 0.5;
 	rgb  = hslToRgb(hsl);
 	//dripFill(hsl, 10);
-	//rainbowSweep(1000,50);
-	drip2(hsl,200, 1000);
+	rainbowSweep(1000,50);
 	
 
 	
