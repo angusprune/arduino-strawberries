@@ -1,43 +1,9 @@
-#include "Adafruit_WS2801.h"
-#include "SPI.h" // Comment out this line if using Trinket or Gemma
-#ifdef __AVR_ATtiny85__
- #include <avr/power.h>
-#endif
-
 #define u8 uint8_t
 #define u32 uint32_t
 
-
-
-
-// BE SURE TO CHECK YOUR PIXELS TO SEE WHICH WIRES TO USE!
-uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
-uint8_t clockPin = 3;    // Green wire on Adafruit Pixels
-uint8_t numberOfLeds = 50;
-
-Adafruit_WS2801 strip = Adafruit_WS2801(numberOfLeds, dataPin, clockPin);
-
-struct RGB {
-  union {
-    struct {
-      byte b;
-      byte g;
-      byte r;
-      byte extra;
-    } ;
-    uint32_t packed;
-  } ;
-} ;
-
-struct HSL {
-	float h;
-	float s;
-	float l;
-};
-
 //UNTESTED
 //Debugger
-#include <stdio.h>
+
 
 #ifdef DEBUG
 
@@ -60,6 +26,25 @@ void flush() {
 
 #else
 
+#include "Adafruit_WS2801.h"
+#include "SPI.h" // Comment out this line if using Trinket or Gemma
+#ifdef __AVR_ATtiny85__
+ #include <avr/power.h>
+#endif
+
+// BE SURE TO CHECK YOUR PIXELS TO SEE WHICH WIRES TO USE!
+uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
+uint8_t clockPin = 3;    // Green wire on Adafruit Pixels
+uint8_t numberOfLeds = 50;
+
+Adafruit_WS2801 strip = Adafruit_WS2801(numberOfLeds, dataPin, clockPin);
+
+void setLed (int led, struct HSL hsl){
+	RGB rgb;
+	rgb = hslToRgb(hsl);
+	strip.setPixelColor(led, rgb.packed);
+}	
+	
 void update_led(int id, struct HSL color) {
   setLed(id, color);
 }
@@ -69,12 +54,6 @@ void flush() {
 }
 
 #endif
-
-void setLed (int led, struct HSL hsl){
-	RGB rgb;
-	rgb = hslToRgb(hsl);
-	strip.setPixelColor(led, rgb.packed);
-}
 
 //HSLtoRGB from http://www.alexkuhl.org/code/#colorspace
 struct RGB hslToRgb( struct HSL hsl){
@@ -497,14 +476,6 @@ void brightnessWipe(struct HSL hsl, int duration, int shift){
 
 //to implement
 //Wipe through offset hsl.l covers
-
-void setup() {
-
-  strip.begin();
-
-  // Update LED contents, to start they are all 'off'
-  strip.show();
-};
 
 void loop() {
 
