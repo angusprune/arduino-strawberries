@@ -84,11 +84,14 @@ struct RGB hslToRgb( struct HSL hsl){
 
 
 //UNTESTED
+<<<<<<< HEAD
 //hslRatio
 struct HSL hslRatio(struct HSl hsl);
 
 
 //UNTESTED
+=======
+>>>>>>> parent of e4f8509... on hold to work on debugger
 //pack HSL
 struct HSL packHsl (int h, int s, int l){
 	HSL hsl;
