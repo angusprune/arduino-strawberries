@@ -81,6 +81,11 @@ struct RGB hslToRgb( struct HSL hsl){
 }
 
 //UNTESTED
+//hslRatio
+struct HSL hslRatio(struct HSl hsl)
+
+
+//UNTESTED
 //pack HSL
 struct HSL packHsl (int h, int s, int l){
 	HSL hsl;
