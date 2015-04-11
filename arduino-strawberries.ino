@@ -32,12 +32,6 @@ struct HSL {
 	float l;
 };
 
-void setLed (int led, struct HSL hsl){
-	RGB rgb;
-	rgb = hslToRgb(hsl);
-	strip.setPixelColor(led, rgb.packed);
-}
-
 //HSLtoRGB from http://www.alexkuhl.org/code/#colorspace
 struct RGB hslToRgb( struct HSL hsl){
 	float h, s, l;
@@ -80,7 +74,6 @@ struct RGB hslToRgb( struct HSL hsl){
 	return rgb;
 }
 
-//UNTESTED
 //pack HSL
 struct HSL packHsl (int h, int s, int l){
 	HSL hsl;
@@ -90,30 +83,15 @@ struct HSL packHsl (int h, int s, int l){
 	return hsl;
 }
 
-//UNTESTED
 //Working set HSL to Web colours http://en.wikipedia.org/wiki/Web_colors
 // White, Silver, Gray, Black, Red, Maroon, Yellow, Olive,
 // Lime, Green, Aqua, Teal, Blue, Navy, Fuchsia, Purple
-struct HSL webColor(char * colorName){
+struct HSL webColor(string colorName){
 	HSL hsl;
-	if (strcmp(colorName , "White")) hsl = packHsl(0,0,100);
-	else if(strcmp(colorName , "Silver")) hsl = packHsl(0,0,75);
-	else if(strcmp(colorName , "Gray")) hsl = packHsl(0,0,50);
-	else if(strcmp(colorName , "Black")) hsl = packHsl(0,0,0);
-	else if(strcmp(colorName , "Red")) hsl = packHsl(0,100,50);
-	else if(strcmp(colorName , "Maroon")) hsl = packHsl(0,100,25);
-	else if(strcmp(colorName , "Yellow")) hsl = packHsl(60,100,50);
-	else if(strcmp(colorName , "Olive")) hsl = packHsl(60,100,25);
-	else if(strcmp(colorName , "Lime")) hsl = packHsl(120,100,50);
-	else if(strcmp(colorName , "Green")) hsl = packHsl(120,100,25);
-	else if(strcmp(colorName , "Aqua")) hsl = packHsl(180,100,50);
-	else if(strcmp(colorName , "Teal")) hsl = packHsl(180,100,25);
-	else if(strcmp(colorName , "Blue")) hsl = packHsl(240,0,75);
-	else if(strcmp(colorName , "Navy")) hsl = packHsl(240,100,25);
-	else if(strcmp(colorName , "Fuchsia")) hsl = packHsl(300,100,50);
-	else if(strcmp(colorName , "Purple")) hsl = packHsl(300,100,25);
-	
-			/*
+	switch (colorName) {
+		case White:
+			hsl = packHsl(0,0,100);
+			break;
 		case Silver:
 			hsl = packHsl(0,0,75);
 			break;
@@ -141,8 +119,6 @@ struct HSL webColor(char * colorName){
 		case Green:
 			hsl = packHsl(120,100,25);
 			break;
-			*/
-			/*
 		case Aqua:
 			hsl = packHsl(180,100,50);
 			break;
@@ -161,83 +137,13 @@ struct HSL webColor(char * colorName){
 		case Purple:
 			hsl = packHsl(300,100,25);
 			break;
-			*/
-		else {
+		default:
 			hsl = packHsl(0,0,0);
-		}
 		
-	
+	}
 	return hsl;
 }
 
-//UNTESTED
-//HSL a fraction between two HSL (directional from hsl1 to hsl2)
-struct HSL SplitHsl(struct HSL hsl1, struct HSL hsl2, int fraction){
-	HSL hslOutput;
-	hsl1.h = fmod(hsl1.h, 360);
-	hsl2.h = fmod(hsl2.h, 360);
-	if (hsl1.h > hsl2.h){
-		hslOutput.h = (hsl1.h - ((hsl1.h - hsl2.h) / fraction));
-	}
-	else {
-		hslOutput.h = (hsl1.h + ((hsl2.h - hsl1.h) / fraction));
-	}
-	if (hsl1.l > hsl2.l){
-		hslOutput.l = (hsl1.l - ((hsl1.l - hsl2.l) / fraction));
-	}
-	else {
-		hslOutput.l = (hsl1.l + ((hsl2.l - hsl1.l) / fraction));
-	}
-	if (hsl1.s > hsl2.s){
-		hslOutput.s = (hsl1.s - ((hsl1.s - hsl2.s) / fraction));
-	}
-	else {
-		hslOutput.s = (hsl1.s + ((hsl2.s - hsl1.s) / fraction));
-	}
-	
-	return (hslOutput);
-}
-
-/*
-//UNTESTED
-// fill one color, change to another from middle
-void colorFromMiddle (struct HSL hslStart, struct HSL hslFinish){
-	int midLed = numberOfLeds / 2;
-	int leftLed = midLed - 1;
-	int rightLed = midLed + 1;
-	HSL color2;
-	//abstract out number of steps later
-	// 3 steps for now
-	color2 = SplitHsl(hslFinish, hslStart, 3);
-	int i;
-	for (i=0; i < numberOfLeds; i++) {
-		rgbStart = hslToRgb(hslStart);
-		strip.setPixelColor(i, rgbStart);
-	}
-	strip.show();
-	
-	
-	for (i=0; i < midLed; i++){
-		strip.setPixelColor(midLed, hslToRgb())
-	}
-	
-	
-}
-*/
-
-//UNTESTED
-//Reverse order of string
-void Reverse(void){
-	RGB rgb1;
-	RGB rgb2;
-	int i;
-	for (i=0; i < (numberOfLeds / 2); i++){
-		rgb1.packed = strip.getPixelColor(i);
-		rgb2.packed = strip.getPixelColor(numberOfLeds - i);
-		strip.setPixelColor(i, rgb2.packed);
-		strip.setPixelColor(numberOfLeds = i, rgb1.packed);
-	}
-}
 
 //wipes the whole spectrum from a starting hsl
 void rainbowWipe(struct HSL hsl, uint8_t wait){
@@ -406,10 +312,9 @@ void rainbowSweep(int duration, int wait){
 	RGB rgb;
 	HSL hsl;
 	HSL hsl2;
-	packHsl(1,0.1,1);
-	//hsl.h = 1;
-	//hsl.l = 0.1;
-	//hsl.s = 1;
+	hsl.h = 1;
+	hsl.l = 0.1;
+	hsl.s = 1;
 		int offset;
 		int speed;
 		int i2;
@@ -463,6 +368,7 @@ void setup() {
 };
 
 void loop() {
+
 
 	HSL hsl;
 	RGB rgb;
