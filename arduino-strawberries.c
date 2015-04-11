@@ -6,6 +6,7 @@
 
 
 #ifdef DEBUG
+int numberOfLeds = 25;
 
 struct HSL led_array[numberOfLeds];
 
@@ -42,7 +43,7 @@ Adafruit_WS2801 strip = Adafruit_WS2801(numberOfLeds, dataPin, clockPin);
 void setLed (int led, struct HSL hsl){
 	RGB rgb;
 	rgb = hslToRgb(hsl);
-	strip.setPixelColor(led, rgb.packed);
+	update_led(led, rgb.packed);
 }	
 	
 void update_led(int id, struct HSL color) {
@@ -235,13 +236,13 @@ void colorFromMiddle (struct HSL hslStart, struct HSL hslFinish){
 	int i;
 	for (i=0; i < numberOfLeds; i++) {
 		rgbStart = hslToRgb(hslStart);
-		strip.setPixelColor(i, rgbStart);
+		update_led(i, rgbStart);
 	}
 	strip.show();
 	
 	
 	for (i=0; i < midLed; i++){
-		strip.setPixelColor(midLed, hslToRgb())
+		update_led(midLed, hslToRgb())
 	}
 	
 	
@@ -257,8 +258,8 @@ void Reverse(void){
 	for (i=0; i < (numberOfLeds / 2); i++){
 		rgb1.packed = strip.getPixelColor(i);
 		rgb2.packed = strip.getPixelColor(numberOfLeds - i);
-		strip.setPixelColor(i, rgb2.packed);
-		strip.setPixelColor(numberOfLeds = i, rgb1.packed);
+		update_led(i, rgb2.packed);
+		update_led(numberOfLeds = i, rgb1.packed);
 	}
 }
 
@@ -271,7 +272,7 @@ void rainbowWipe(struct HSL hsl, uint8_t wait){
 	for (i=0; i < numberOfLeds; i++){
 		hsl.h = hsl.h + shift;
 		rgb = hslToRgb(hsl);
-		strip.setPixelColor(i, rgb.packed);
+		update_led(i, rgb.packed);
 		strip.show();
 		delay(wait);
 	}
@@ -284,7 +285,7 @@ void oneColor (struct HSL hsl){
 	RGB rgb;
 	rgb = hslToRgb(hsl);
 	for (i = 0; i < numberOfLeds; i++) {
-		strip.setPixelColor(i, rgb.packed);
+		update_led(i, rgb.packed);
 	}
 	strip.show();
 }
@@ -295,7 +296,7 @@ void wipeColor (struct HSL hsl, uint8_t wait){
 	RGB rgb;
 	rgb = hslToRgb(hsl);
 	for (i=0; i < numberOfLeds; i++){
-		strip.setPixelColor(i, rgb.packed);
+		update_led(i, rgb.packed);
 		strip.show();
 		delay(wait);
 	}
@@ -308,9 +309,9 @@ void drip (struct HSL hsl, int wait){
 	RGB rgb;
 	rgb = hslToRgb(hsl);
 		for (i=0; i < numberOfLeds; i++){
-		strip.setPixelColor(i, rgb.packed);
+		update_led(i, rgb.packed);
 		if (i > 0){
-			strip.setPixelColor(i-1, 0);
+			update_led(i-1, 0);
 		};
 		strip.show();
 		delay(wait);
@@ -327,52 +328,52 @@ void drip2 (struct HSL hsl, int wait, int duration){
 		for (i=0; i < duration; i++){
 			led = i % numberOfLeds;
 			rgb = hslToRgb(hsl);
-			strip.setPixelColor(led, rgb.packed);
+			update_led(led, rgb.packed);
 			strip.show();
 			delay(wait/5);
 			hsl2.l = hsl.l /2;
 			rgb = hslToRgb(hsl2);
 			led = (i-1) % numberOfLeds;
-			strip.setPixelColor(led, rgb.packed);
+			update_led(led, rgb.packed);
 			strip.show();
 			delay(wait/5);
 			hsl2.l = hsl2.l /2;
 			rgb = hslToRgb(hsl2);
 						led = (i-2) % numberOfLeds;
-			strip.setPixelColor(led, rgb.packed);
+			update_led(led, rgb.packed);
 			strip.show();
 			delay(wait/5);
 			hsl2.l = hsl2.l /2;
 			rgb = hslToRgb(hsl2);
 						led = (i-3) % numberOfLeds;
-			strip.setPixelColor(led, rgb.packed);
+			update_led(led, rgb.packed);
 			strip.show();
 			delay(wait/5);
 			hsl2.l = 0;
 			rgb = hslToRgb(hsl2);
 						led = (i-4) % numberOfLeds;
-			strip.setPixelColor(led, rgb.packed );
+			update_led(led, rgb.packed );
 			strip.show();
 			
 			delay(wait/5);
 		}
 	/*
-		strip.setPixelColor(5, rgb.packed);
+		update_led(5, rgb.packed);
 	hsl.l = 0.01;
 	hsl.s = 0.5;
 	rgb = hslToRgb(hsl);
-	strip.setPixelColor(6, rgb.packed);
+	update_led(6, rgb.packed);
 	strip.show();
-		strip.setPixelColor(7, rgb.packed);
+		update_led(7, rgb.packed);
 	hsl.l = 0.01;
 	hsl.s = 0.01;
 	rgb = hslToRgb(hsl);
-	strip.setPixelColor(8, rgb.packed);
+	update_led(8, rgb.packed);
 	strip.show();
 		hsl.l = 0.003;
 	hsl.s = 0.003;
 	rgb = hslToRgb(hsl);
-	strip.setPixelColor(9, rgb.packed);
+	update_led(9, rgb.packed);
 	strip.show();
 */
 }
@@ -383,9 +384,9 @@ void dripForFill (struct HSL hsl, int wait, int fill){
 	RGB rgb;
 	rgb = hslToRgb(hsl);
 		for (i=0; i < numberOfLeds - fill; i++){
-		strip.setPixelColor(i, rgb.packed);
+		update_led(i, rgb.packed);
 		if (i > 0){
-			strip.setPixelColor(i-1, 0);
+			update_led(i-1, 0);
 		};
 		strip.show();
 		delay(wait);
@@ -399,9 +400,9 @@ void drip2ForFill (struct HSL hsl, int wait, int fill){
 	RGB rgb;
 	rgb = hslToRgb(hsl);
 		for (i=0; i < numberOfLeds - fill; i++){
-		strip.setPixelColor(i, rgb.packed);
+		update_led(i, rgb.packed);
 		if (i > 0){
-			strip.setPixelColor(i-1, 0);
+			update_led(i-1, 0);
 		};
 		strip.show();
 		delay(wait);
@@ -418,7 +419,7 @@ void dripFill (struct HSL hsl, int wait){
 		dripForFill(hsl, wait, i);
 		int i2;
 		for (i2=0; i2 < i; i2++){
-			strip.setPixelColor(numberOfLeds-i2, rgb.packed);
+			update_led(numberOfLeds-i2, rgb.packed);
 		}
 	}
 }
@@ -444,7 +445,7 @@ void rainbowSweep(int duration, int wait){
 
 		for (i2 = 0; i2 < numberOfLeds; i2++){
 			rgb = hslToRgb(hsl2);
-			strip.setPixelColor(i2, rgb.packed);
+			update_led(i2, rgb.packed);
 			hsl2.h = hsl2.h + offset;
 		}
 		strip.show();
@@ -467,7 +468,7 @@ void brightnessWipe(struct HSL hsl, int duration, int shift){
 			float shift;
 			shift = 100 / numberOfLeds;
 			rgb  = hslToRgb(hsl);
-			strip.setPixelColor(i, rgb.packed);
+			update_led(i, rgb.packed);
 			hsl.l = hsl.l + shift;
 		}
 	strip.show();
