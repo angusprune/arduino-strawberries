@@ -7,6 +7,9 @@
 #define u8 uint8_t
 #define u32 uint32_t
 
+
+
+
 // BE SURE TO CHECK YOUR PIXELS TO SEE WHICH WIRES TO USE!
 uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
 uint8_t clockPin = 3;    // Green wire on Adafruit Pixels
@@ -31,6 +34,41 @@ struct HSL {
 	float s;
 	float l;
 };
+
+//UNTESTED
+//Debugger
+#include <stdio.h>
+
+#ifdef DEBUG
+
+struct HSL led_array[numberOfLeds];
+
+void printTerminalColor(struct HSL color) {
+  
+}
+
+void update_led(int id, struct HSL color) {
+  led_array[id] = color;
+}
+
+void flush() {
+  for(int i=0; i<numberOfLeds; i++) {
+    printTerminalColor(led_array[i]);
+  }
+  putchar('\n');
+}
+
+#else
+
+void update_led(int id, struct HSL color) {
+  arduinoLed(id, hslToPacked(color));
+}
+
+void flush() {
+  arduinoLedFlush();
+}
+
+#endif
 
 void setLed (int led, struct HSL hsl){
 	RGB rgb;
@@ -80,9 +118,10 @@ struct RGB hslToRgb( struct HSL hsl){
 	return rgb;
 }
 
+
 //UNTESTED
 //hslRatio
-struct HSL hslRatio(struct HSl hsl)
+struct HSL hslRatio(struct HSl hsl);
 
 
 //UNTESTED
